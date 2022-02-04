@@ -7,18 +7,16 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // errorService.log({ error, errorInfo });
   }
 
   triggerError = ({ error, errorInfo }) => {
-    // errorService.log({ error, errorInfo });
     this.setState({ hasError: true });
   };
 
   resetError = () => this.setState({ hasError: false });
   
   render() {
-    if (this.state.hasError) return <h1>Oops, we done goofed up</h1>;
+    if (this.state.hasError) return <h1>Oops, something went wrong please try again</h1>;
     return this.props.children;
   }
 }

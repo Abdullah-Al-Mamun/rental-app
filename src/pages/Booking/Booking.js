@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonGroup, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { ButtonGroup, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 import SelectContainer from "../../components/Elements/SelectContainer";
 import NumericContainer from "../../components/Elements/NumericContainer";
 import DateTimeContainer from "../../components/Elements/DateTimeContainer";
@@ -25,52 +25,66 @@ class Booking extends React.Component {
     this.state = {
       filterValue: '',
       products: [],
-      product: {}
+      product: {},
+      showAlert: false
     };
-    this.useInput = this.useInput.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDateChange = this.handleDateChange.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
   }
 
   componentDidMount() {
     const products = fetchProducts();
     updateProducts(products);
-    this.setState({ products: products })
+    this.setState({ products: products });
   }
 
   handleChange = (e) => {
-    const { product, errors } = this.state;
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    const name = e.target.name;
-    this.setState({
-      product: {
-        ...product,
-        [name]: value
-      }, errors: { ...errors, [name]: false }
-    });
+    try {
+      const { product, errors } = this.state;
+      const value =
+        e.target.type === "checkbox" ? e.target.checked : e.target.value;
+      const name = e.target.name;
+      this.setState({
+        product: {
+          ...product,
+          [name]: value
+        }, errors: { ...errors, [name]: false }
+      });
+    } catch (err) {
+      this.logError(err);
+    }
   }
 
   handleDateChange = (moment, name, format) => {
-    if (!moment._isValid) return;
-    let value = moment.format(format);
-    const { product, errors } = this.state;
-    this.setState({
-      product: {
-        ...product,
-        [name]: value
-      }, errors: { ...errors, [name]: false }
-    });
+    try {
+      if (!moment._isValid) return;
+      let value = moment.format(format);
+      const { product, errors } = this.state;
+      this.setState({
+        product: {
+          ...product,
+          [name]: value
+        }, errors: { ...errors, [name]: false }
+      });
+    } catch (error) {
+      this.logError(error);
+    }
   }
 
   onSelectChange = (e) => {
-    const { products } = this.state;
-    this.handleChange(e);
-    const product = products.find(p => p.code === e.target.value);
-    this.setState({
-      product: { ...product },
-    });
+    try {
+      const { products } = this.state;
+      this.handleChange(e);
+      const product = products.find(p => p.code === e.target.value);
+      this.setState({
+        product: { ...product },
+      });
+    }
+    catch (error) {
+      this.logError(error);
+    }
+  }
+
+  onDismiss = () => {
+    this.setState({ showAlert: false });
   }
 
   useInput = (props) => {
@@ -114,6 +128,14 @@ class Booking extends React.Component {
       if (error) errors[name] = true;
     }
     return errors;
+  };
+
+  logError = (error) => {
+    console.error(error);
+    this.setState({
+      showAlert: true,
+      alertMessage: error.message
+    });
   };
 
   validateBooking = (product) => {
@@ -241,13 +263,18 @@ class Booking extends React.Component {
   }
 
   update = () => {
-    const { isBooking } = this.state;
-    if (isBooking) this.bookProduct();
-    else this.returnProduct();
+    try {
+      const { isBooking } = this.state;
+      if (isBooking) this.bookProduct();
+      else this.returnProduct();
+    }
+    catch (error) {
+      this.logError(error);
+    }
   }
 
   render() {
-    const { show, filterValue, isBooking, products, product } = this.state;
+    const { show, filterValue, isBooking, products, product, showAlert, alertMessage } = this.state;
     const sourceProducts = products.filter(p => (isBooking && p.availability)
       || (!isBooking && !p.availability && !p.needing_repair));
     return <div style={{ margin: "10px" }}>
@@ -318,6 +345,9 @@ class Booking extends React.Component {
             label="Used Mileage"
             {...this.useInput({ name: "usedMileage" })}
           />}
+          <Alert color="danger" isOpen={showAlert} toggle={this.onDismiss}>
+            {alertMessage}
+          </Alert>
         </ModalBody>
         <ModalFooter>
           <Button style={{ width: "100px", height: "32px", marginRight: '.25em' }} onClick={this.toggle} label="No" icon="pi pi-times-circle" className="p-button-raised p-button-danger" />
