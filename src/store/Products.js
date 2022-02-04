@@ -9,6 +9,7 @@ export const fetchProducts = () => {
         if (!products) {
             try {
                 products = require('./Data.json');
+                updateProducts(products);
                 return products;
             } catch (e) {
                 return undefined;

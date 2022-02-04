@@ -31,8 +31,9 @@ class Booking extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Get products");
     const products = fetchProducts();
-    updateProducts(products);
+    console.log("Getting products", products);
     this.setState({ products: products });
   }
 
@@ -74,6 +75,7 @@ class Booking extends React.Component {
       const { products } = this.state;
       this.handleChange(e);
       const product = products.find(p => p.code === e.target.value);
+      console.log("Select product", product);
       this.setState({
         product: { ...product },
       });
@@ -179,6 +181,7 @@ class Booking extends React.Component {
   };
 
   calculateRentalFee = (product) => {
+    console.log("Calculate rental fee");
     let days = GetDays(product.fromDate, product.toDate);
     if (days === null || days === undefined || days < 0) return;
     days++;
@@ -191,9 +194,11 @@ class Booking extends React.Component {
     }
     product.rentalFee = rentalFee;
     product.usedMileage = days * 10;
+    console.log("Calculated rental fee is:  ", rentalFee);
   };
 
   calculateDurability = (product) => {
+    console.log("Calculate durability & rental fee");
     let days = parseInt(product.usedMileage) / 10;
     let rentalFee = RoundNumber(parseFloat(product.price) * days, 2);
     if (product.discount
@@ -210,9 +215,12 @@ class Booking extends React.Component {
     else {
       product.durability -= (days * 4);
     }
+    console.log("Available durability is: ", product.durability);
+    console.log("Calculated rental free is: ", rentalFee);
   };
 
   bookProduct = () => {
+    console.log("Booking product...");
     let that = this;
     const { products, product } = that.state;
     if (!this.validateBooking(product)) return;
@@ -226,6 +234,7 @@ class Booking extends React.Component {
           product.availability = false;
           ObjectAssign(updatedProduct, { ...product });
           updateProducts(products);
+          console.log("Booking product completed...");
           that.toggle();
         }
       }
@@ -241,6 +250,7 @@ class Booking extends React.Component {
       title: "Return a product",
       text: `Your total price is $${product.rentalFee}.\nDo you want to procedure?`,
       onOkClick: () => {
+        console.log("Return product...");
         let updatedProduct = products.find(p => p.code === product.code);
         if (updatedProduct) {
           product.availability = true;
@@ -256,6 +266,7 @@ class Booking extends React.Component {
           delete product.usedMileage;
           ObjectAssign(updatedProduct, { ...product });
           updateProducts(products);
+          console.log("Return product completed...");
           that.toggle();
         }
       }
