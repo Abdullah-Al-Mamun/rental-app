@@ -6,7 +6,7 @@ import DateTimeContainer from "../../components/Elements/DateTimeContainer";
 import SearchContainer from "../../components/Elements/SearchContainer";
 
 import {
-  AppConst, ShowMessageBox, ShowConfirmBox, ObjectAssign,
+  AppConst, ShowConfirmBox, ObjectAssign,
   OnBooleanTemplate, OnRowIndexTemplate,
   GetDays, IsObjectEmpty, RoundNumber
 } from "../../utils/Util";
@@ -23,7 +23,7 @@ class Booking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterValue: '',
+      filterValue: "",
       products: [],
       product: {},
       showAlert: false
@@ -85,10 +85,6 @@ class Booking extends React.Component {
     }
   }
 
-  onDismiss = () => {
-    this.setState({ showAlert: false });
-  }
-
   useInput = (props) => {
     const { name, isDateTime, onChange } = props;
     const value = this.state.product[name];
@@ -114,7 +110,8 @@ class Booking extends React.Component {
       isBooking: isBooking,
       product: {},
       show: !show,
-      errors: {}
+      errors: {},
+      showAlert: false
     });
   }
 
@@ -142,33 +139,43 @@ class Booking extends React.Component {
 
   validateBooking = (product) => {
     let errors = {};
+    let showAlert = false;
+    let message = "";
     if (!product.code) errors["code"] = true;
     if (!product.fromDate) errors["fromDate"] = true;
     if (!product.toDate) errors["toDate"] = true;
     let days = GetDays(product.fromDate, product.toDate);
     if (days === null || days === undefined || days < 0) {
-      ShowMessageBox({ title: AppConst.ProjectTitle, text: "The To date must be greater than the From date." });
+      showAlert = true;
+      message = "The To date must be greater than the From date.";
       errors["error"] = true;
     }
     days++;
     if (!product.discount
       && product.minimum_rent_period
       && parseInt(product.minimum_rent_period) > days) {
-      ShowMessageBox({ title: AppConst.ProjectTitle, text: `The user can only rent the product longer than the minimum rental period(${product.minimum_rent_period}).` });
+      showAlert = true;
+      message += `The user can only rent the product longer than the minimum rental period(${product.minimum_rent_period}).`;
       errors["error"] = true;
     }
     if (product.type === "plain"
       && days > parseInt(product.durability)) {
-      ShowMessageBox({ title: AppConst.ProjectTitle, text: "The user can only rent the product longer than the durability." });
+      showAlert = true;
+      message += "The user can only rent the product longer than the durability.";
       errors["error"] = true;
     }
     if (product.type === "meter"
       && (days * 4) > parseInt(product.durability)) {
-      ShowMessageBox({ title: AppConst.ProjectTitle, text: "The user can only rent the product longer than the durability." });
+      showAlert = true;
+      message += "The user can only rent the product longer than the durability.";
       errors["error"] = true;
     }
 
-    this.setState({ errors: errors });
+    this.setState({
+      errors: errors,
+      showAlert: showAlert,
+      alertMessage: message
+    });
     return IsObjectEmpty(errors)
   };
 
@@ -356,7 +363,7 @@ class Booking extends React.Component {
             label="Used Mileage"
             {...this.useInput({ name: "usedMileage" })}
           />}
-          <Alert color="danger" isOpen={showAlert} toggle={this.onDismiss}>
+          <Alert color="danger" isOpen={showAlert} toggle={() => this.setState({ showAlert: false })}>
             {alertMessage}
           </Alert>
         </ModalBody>
