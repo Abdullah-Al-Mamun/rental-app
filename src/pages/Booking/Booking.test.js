@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import Booking from './Booking';
 
-test('renders page title', () => {
+test('should render Booking component', () => {
   render(<Booking />);
-  const titleEle = screen.getByText(/Booking Information/i);
-  expect(titleEle).toBeInTheDocument();
+  const titleElement = screen.getByText(/Booking Information/i);
+  expect(titleElement).toBeInTheDocument();
 });
+
