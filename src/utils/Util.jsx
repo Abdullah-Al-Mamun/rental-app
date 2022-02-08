@@ -17,23 +17,6 @@ export const AppConst = {
   MinDateValue: "01/01/0001",
 };
 
-export const HideWait = () => {
-  let element = document.getElementsByClassName("loadingparent");
-  if (element.length && element[0].parentNode) {
-    for (let i = 0; i < element.length; i++) {
-      element[0].parentNode.removeChild(element[i]);
-    }
-  }
-};
-
-export const ShowWait = () => {
-  HideWait();
-  let div = document.createElement("div");
-  div.className = "loadingparent";
-  div.innerHTML = "<div class='ball'></div><div class='ball1'></div>";
-  document.body.appendChild(div);
-};
-
 export const ShowMessageBox = (config) => {
   config = config || {};
   swal({
@@ -293,7 +276,6 @@ const GetCaretPosition = (el) => {
       }
     }
   }
-
   return {
     start: start,
     end: end,
@@ -322,7 +304,7 @@ export const GetDays = (fromDate, todate) => {
     const startDate = moment(fromDate, AppConst.DateFormat);
     const endDate = moment(todate, AppConst.DateFormat);
     return endDate.diff(startDate, "days");
-  } catch (ex) {
-    return undefined;
+  } catch (error) {
+    throw error;
   }
 };

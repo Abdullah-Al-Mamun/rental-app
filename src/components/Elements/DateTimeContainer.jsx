@@ -15,10 +15,20 @@ const DateTimeContainer = props => {
       </label>
       <div className={`col-xl-${props.icol}`}>
         <Datetime
-          value={props.value || null}
-          onChange={props.onChange}          
+          onChange={moment =>
+            props.onChange(
+              moment,
+              props.name,
+              props.isDate && props.isTime
+                ? `${AppConst.DateFormat} ${AppConst.TimeFormat}`
+                : props.isDate
+                  ? AppConst.DateFormat
+                  : AppConst.TimeFormat
+            )
+          }
           inputProps={{
             name: props.name,
+            value: props.value || "",
             className: error ? "form-control Date-Time is-invalid" : "form-control Date-Time",
             // readOnly: "readOnly",
             disabled: props.readOnly,

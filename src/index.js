@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import TopPanel from './components/Layout/TopPanel';
-import Booking from './pages/Booking/Booking';
+import Rental from './pages/Rental';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
@@ -12,8 +12,8 @@ import './assets/css/App.css';
 
 ReactDOM.render(
   <ErrorBoundary>
-    <TopPanel title="Booking Information" />
-    <Booking />
+    <TopPanel title="Rental Information" />
+    <Rental />
   </ErrorBoundary>,
   document.getElementById('root')
 );

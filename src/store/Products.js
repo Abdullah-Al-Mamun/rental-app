@@ -1,22 +1,24 @@
 export const updateProducts = (products) => {
-    if (products && products.length !== 0)
-        localStorage.setItem("rental_products", JSON.stringify(products));
+    try {
+        if (products
+            && products.length !== 0)
+            localStorage.setItem("rental_products", JSON.stringify(products));
+    }
+    catch (error) {
+        throw error;
+    }
 };
 
 export const fetchProducts = () => {
     try {
         let products = localStorage.getItem("rental_products");
         if (!products) {
-            try {
-                products = require('./Data.json');
-                updateProducts(products);
-                return products;
-            } catch (e) {
-                return undefined;
-            }
+            products = require('./Data.json');
+            updateProducts(products);
+            return products;
         }
         return JSON.parse(products);
-    } catch (ex) {
-        return undefined;
+    } catch (error) {
+        throw error;
     }
 };
