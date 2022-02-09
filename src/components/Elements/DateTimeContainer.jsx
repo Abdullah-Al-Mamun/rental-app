@@ -10,7 +10,7 @@ const DateTimeContainer = props => {
   error = error && Object.keys(error).length >= 1;
   return (
     <FormGroup row>
-      <label className={`control-label col-xl-${props.lcol}`}>
+      <label htmlFor={props.name} className={`control-label col-xl-${props.lcol}`}>
         {props.label}
       </label>
       <div className={`col-xl-${props.icol}`}>

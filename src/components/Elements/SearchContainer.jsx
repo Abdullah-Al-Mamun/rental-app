@@ -10,8 +10,8 @@ const SearchContainer = (props) => {
     >
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText
-          name={props.name}
+        <InputText        
+          name={props.name}          
           value={props.value || ""}
           onChange={props.onChange}
           placeholder={props.placeholder}

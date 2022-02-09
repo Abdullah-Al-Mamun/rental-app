@@ -1,17 +1,23 @@
 import { ShowConfirmBox, IsObjectEmpty, RoundNumber, ObjectAssign } from "../../../utils/Util";
 import { updateProducts } from '../../../store/Products';
 
-const validate = (product) => {
+export const validate = (product) => {
     let errors = {};
+    let errorMsg = "";
+    if (product.availability || product.needing_repair) {
+        errorMsg = "The product is not available for return.";
+        errors["error"] = true;
+    }
     if (!product.code) errors["code"] = true;
     if (!product.usedMileage) errors["usedMileage"] = true;
     return {
+        errorMsg,
         errors,
         valid: IsObjectEmpty(errors)
     }
 };
 
-const calculateDurability = (product) => {
+export const calculateDurability = (product) => {
     console.log("Calculate durability & rental fee");
     let days = parseInt(product.usedMileage) / 10;
     let rentalFee = RoundNumber(parseFloat(product.price) * days, 2);

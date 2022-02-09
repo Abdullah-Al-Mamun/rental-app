@@ -1,15 +1,19 @@
 import { ShowConfirmBox, GetDays, IsObjectEmpty, RoundNumber, ObjectAssign } from "../../../utils/Util";
 import { updateProducts } from '../../../store/Products';
 
-const validate = (product) => {
+export const validate = (product) => {
     let errors = {};
     let errorMsg = "";
+    if (!product.availability) {
+        errorMsg = "The product is not available for booking.";
+        errors["error"] = true;
+    }
     if (!product.code) errors["code"] = true;
     if (!product.fromDate) errors["fromDate"] = true;
     if (!product.toDate) errors["toDate"] = true;
     let days = GetDays(product.fromDate, product.toDate);
     if (days === null || days === undefined || days < 0) {
-        errorMsg = "The To date must be greater than the From date.";
+        errorMsg += "The To date must be greater than the From date.";
         errors["error"] = true;
     }
     days++;
@@ -36,7 +40,7 @@ const validate = (product) => {
     }
 };
 
-const calculateRentalFee = (product) => {
+export const calculateRentalFee = (product) => {
     console.log("Calculate rental fee");
     let days = GetDays(product.fromDate, product.toDate);
     if (days === null || days === undefined || days < 0) return;

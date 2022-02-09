@@ -53,9 +53,10 @@ const Return = ({ show, close, products }) => {
   };
 
   const returnNow = () => {
-    try {      
-      const result = returnProduct(products, product, toggle);      
+    try {
+      const result = returnProduct(products, product, toggle);
       if (result) {
+        setErrorMsg(result.errorMsg);
         setErrors(result.errors);
       }
     }
@@ -65,7 +66,7 @@ const Return = ({ show, close, products }) => {
     }
   }
 
-  const sourceProducts = products.filter(p => (!p.availability && !p.needing_repair));
+  const sourceProducts = products.filter(p => !p.availability && !p.needing_repair);
 
   return (
     <Modal

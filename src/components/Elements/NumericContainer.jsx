@@ -8,7 +8,7 @@ const NumericContainer = (props) => {
   if (!error) error = {};
   return (
     <FormGroup row>
-      <label className={`control-label col-xl-${props.lcol}`}>
+      <label htmlFor={props.name} className={`control-label col-xl-${props.lcol}`}>
         {props.label}
       </label>
       <div className={`col-xl-${props.icol}`}>

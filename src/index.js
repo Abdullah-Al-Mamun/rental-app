@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ErrorBoundary from './components/Common/ErrorBoundary';
-import TopPanel from './components/Layout/TopPanel';
 import Rental from './pages/Rental';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,8 +10,7 @@ import 'primeicons/primeicons.css';
 import './assets/css/App.css';
 
 ReactDOM.render(
-  <ErrorBoundary>
-    <TopPanel title="Rental Information" />
+  <ErrorBoundary>    
     <Rental />
   </ErrorBoundary>,
   document.getElementById('root')
